@@ -50,13 +50,17 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
           </DropdownMenuItem>
         )}
         {isAdmin && (
-          <DropdownMenuItem className='px-3 py-2 text-sm cursor-pointer'>
+          <DropdownMenuItem
+            onClick={() => onOpen("editServer", { server })}
+            className='px-3 py-2 text-sm cursor-pointer'>
             服务设置
             <Settings className='h-4 w-4 ml-auto' />
           </DropdownMenuItem>
         )}
         {isAdmin && (
-          <DropdownMenuItem className='px-3 py-2 text-sm cursor-pointer'>
+          <DropdownMenuItem
+            onClick={() => onOpen("members", { server })}
+            className='px-3 py-2 text-sm cursor-pointer'>
             管理成员
             <Users className='h-4 w-4 ml-auto' />
           </DropdownMenuItem>
