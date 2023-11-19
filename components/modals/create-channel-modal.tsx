@@ -33,43 +33,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useEffect } from "react"
 
 const formSchema = z.object({
   name: z
     .string()
     .min(1, {
-      message: "频道名称不能为空",
+      message: "请填写名称",
     })
     .refine((name) => name !== "general", {
-      message: "频道名称不能为 'general'",
+      message: "频道名称不能是'general'",
     }),
   type: z.nativeEnum(ChannelType),
 })
 
 export const CreateChannelModal = () => {
-  const { isOpen, onClose, type } = useModal()
+  const { isOpen, onClose, type, data } = useModal()
   const router = useRouter()
   const params = useParams()
 
   const isModalOpen = isOpen && type === "createChannel"
+  const { channelType } = data
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: channelType || ChannelType.TEXT,
     },
   })
+
+  useEffect(() => {
+    if (channelType) {
+      form.setValue("type", channelType)
+    } else {
+      form.setValue("type", ChannelType.TEXT)
+    }
+  }, [channelType, form])
 
   const isLoading = form.formState.isSubmitting
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const url = qs.stringify({
-        url: '/api/channels',
+      const url = qs.stringifyUrl({
+        url: "/api/channels",
         query: {
-          serverId: params?.serverId
-        }
+          serverId: params?.serverId,
+        },
       })
       await axios.post(url, values)
 
@@ -91,7 +101,7 @@ export const CreateChannelModal = () => {
       <DialogContent className='bg-white text-black p-0 overflow-hidden'>
         <DialogHeader className='pt-8 px-6'>
           <DialogTitle className='text-2xl text-center font-bold'>
-            创建聊天频道
+            建立频道
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -109,7 +119,7 @@ export const CreateChannelModal = () => {
                       <Input
                         disabled={isLoading}
                         className='bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0'
-                        placeholder='输入频道名称'
+                        placeholder='输入一个频道名字'
                         {...field}
                       />
                     </FormControl>
@@ -122,34 +132,35 @@ export const CreateChannelModal = () => {
                 name='type'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70'>
-                      频道类型
-                    </FormLabel>
+                    <FormLabel>频道类型</FormLabel>
                     <Select
                       disabled={isLoading}
                       onValueChange={field.onChange}
                       defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
-                            <SelectValue placeholder="请选择频道类型" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.values(ChannelType).map((type) => (
-                            <SelectItem key={type} value={type} className="capitalize">
-                              {type.toLowerCase()}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
+                      <FormControl>
+                        <SelectTrigger className='bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none'>
+                          <SelectValue placeholder='Select a channel type' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.values(ChannelType).map((type) => (
+                          <SelectItem
+                            key={type}
+                            value={type}
+                            className='capitalize'>
+                            {type.toLowerCase()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
             <DialogFooter className='bg-gray-100 px-6 py-4'>
-              <Button variant='primary' disabled={isLoading} type='submit'>
-                创建服务器
+              <Button variant='primary' disabled={isLoading}>
+                创建
               </Button>
             </DialogFooter>
           </form>
