@@ -117,7 +117,7 @@ export const EditChannelModal = () => {
                       <Input
                         disabled={isLoading}
                         className='bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0'
-                        placeholder='输入一个频道名字'
+                        placeholder={channel?.name}//'输入一个频道名字'
                         {...field}
                       />
                     </FormControl>
