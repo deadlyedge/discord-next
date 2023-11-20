@@ -9,6 +9,8 @@ export type ModalType =
   | "createChannel"
   | "leaveServer"
   | "deleteServer"
+  | "deleteChannel"
+  | "editChannel"
 
 type ModalData = {
   server?: Server
