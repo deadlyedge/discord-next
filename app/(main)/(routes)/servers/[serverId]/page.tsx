@@ -13,9 +13,7 @@ type ServerIdPageProps = {
 const ServerIdPage = async ({ params }: ServerIdPageProps) => {
   const profile = await currentProfile()
 
-  if (!profile) {
-    return redirectToSignIn()
-  }
+  if (!profile) return redirectToSignIn()
 
   const server = await db.server.findUnique({
     where: {

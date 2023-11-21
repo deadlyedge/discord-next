@@ -67,7 +67,7 @@ export const EditChannelModal = () => {
       form.setValue("name", channel.name)
       form.setValue("type", channel.type)
     }
-  }, [form, channel])
+  }, [form, channel, isOpen])
 
   const isLoading = form.formState.isSubmitting
 
@@ -117,7 +117,7 @@ export const EditChannelModal = () => {
                       <Input
                         disabled={isLoading}
                         className='bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0'
-                        placeholder={channel?.name}//'输入一个频道名字'
+                        placeholder='输入一个频道名字'
                         {...field}
                       />
                     </FormControl>
