@@ -9,13 +9,13 @@ export const SocketIndicator = () => {
   if (!isConnected) {
     return (
       <Badge variant='outline' className='bg-yellow-600 text-white border-none'>
-        Fallback: Polling every 1s
+        Fallback: 1秒后重试
       </Badge>
     )
   }
   return (
     <Badge variant='outline' className='bg-emerald-600 text-white border-none'>
-      Live: Realtime updates
+      Live: 实时更新
     </Badge>
   )
 }
