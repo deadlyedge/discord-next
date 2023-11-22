@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import axios from "axios";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import axios from "axios"
+import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { useEffect } from "react"
 
 import {
   Dialog,
@@ -13,94 +13,94 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/file-upload";
-import { useRouter } from "next/navigation";
-import { useModal } from "@/hooks/use-modal-store";
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { FileUpload } from "@/components/file-upload"
+import { useRouter } from "next/navigation"
+import { useModal } from "@/hooks/use-modal-store"
 
 const formSchema = z.object({
   name: z.string().min(1, {
-    message: "Server name is required."
+    message: "Server name is required.",
   }),
   imageUrl: z.string().min(1, {
-    message: "Server image is required."
-  })
-});
+    message: "Server image is required.",
+  }),
+})
 
 export const EditServerModal = () => {
-  const { isOpen, onClose, type, data } = useModal();
-  const router = useRouter();
+  const { isOpen, onClose, type, data } = useModal()
+  const router = useRouter()
 
-  const isModalOpen = isOpen && type === "editServer";
-  const { server } = data;
+  const isModalOpen = isOpen && type === "editServer"
+  const { server } = data
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       imageUrl: "",
-    }
-  });
+    },
+  })
 
   useEffect(() => {
     if (server) {
-      form.setValue("name", server.name);
-      form.setValue("imageUrl", server.imageUrl);
+      form.setValue("name", server.name)
+      form.setValue("imageUrl", server.imageUrl)
     }
-  }, [server, form, isOpen]);
+  }, [server, form, isOpen])
 
-  const isLoading = form.formState.isSubmitting;
+  const isLoading = form.formState.isSubmitting
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/servers/${server?.id}`, values);
+      await axios.patch(`/api/servers/${server?.id}`, values)
 
-      form.reset();
-      router.refresh();
-      onClose();
+      form.reset()
+      router.refresh()
+      onClose()
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
   const handleClose = () => {
-    form.reset();
-    onClose();
+    form.reset()
+    onClose()
   }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
-        <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center font-bold">
-            Customize your server
+      <DialogContent className='bg-white text-black p-0 overflow-hidden'>
+        <DialogHeader className='pt-8 px-6'>
+          <DialogTitle className='text-2xl text-center font-bold'>
+            自定义您的服务器
           </DialogTitle>
-          <DialogDescription className="text-center text-zinc-500">
-            Give your server a personality with a name and an image. You can always change it later.
+          <DialogDescription className='text-center text-zinc-500'>
+            给服务器定义个性化的名称和图标。你以后还可以做修改。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-8 px-6">
-              <div className="flex items-center justify-center text-center">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+            <div className='space-y-8 px-6'>
+              <div className='flex items-center justify-center text-center'>
                 <FormField
                   control={form.control}
-                  name="imageUrl"
+                  name='imageUrl'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <FileUpload
-                          endpoint="serverImage"
+                          endpoint='serverImage'
                           value={field.value}
                           onChange={field.onChange}
                         />
@@ -112,19 +112,17 @@ export const EditServerModal = () => {
 
               <FormField
                 control={form.control}
-                name="name"
+                name='name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel
-                      className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70"
-                    >
-                      Server name
+                    <FormLabel className='uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70'>
+                      名称
                     </FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        placeholder="Enter server name"
+                        className='bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0'
+                        placeholder='输入服务器名称'
                         {...field}
                       />
                     </FormControl>
@@ -133,9 +131,9 @@ export const EditServerModal = () => {
                 )}
               />
             </div>
-            <DialogFooter className="bg-gray-100 px-6 py-4">
-              <Button variant="primary" disabled={isLoading}>
-                Save
+            <DialogFooter className='bg-gray-100 px-6 py-4'>
+              <Button variant='primary' disabled={isLoading}>
+                保存
               </Button>
             </DialogFooter>
           </form>
