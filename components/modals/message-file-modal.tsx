@@ -72,10 +72,10 @@ export const MessageFileModal = () => {
       <DialogContent className='bg-white text-black p-0 overflow-hidden'>
         <DialogHeader className='pt-8 px-6'>
           <DialogTitle className='text-2xl text-center font-bold'>
-            添加文件
+            发送文件消息
           </DialogTitle>
           <DialogDescription className='text-center text-zinc-500'>
-            发送文件消息
+            添加一张图片或一个PDF文件
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
