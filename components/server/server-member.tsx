@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { UserAvatar } from "@/components/user-avatar";
 
-interface ServerMemberProps {
+type ServerMemberProps ={
   member: Member & { profile: Profile };
   server: Server;
 }
