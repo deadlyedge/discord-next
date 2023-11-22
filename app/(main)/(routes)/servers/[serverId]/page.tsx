@@ -1,19 +1,23 @@
-import { redirectToSignIn } from "@clerk/nextjs"
-import { redirect } from "next/navigation"
+import { redirectToSignIn } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
-import { currentProfile } from "@/lib/current-profile"
-import { db } from "@/lib/db"
+import { currentProfile } from "@/lib/current-profile";
+import { db } from "@/lib/db";
 
-type ServerIdPageProps = {
+interface ServerIdPageProps {
   params: {
-    serverId: string
+    serverId: string;
   }
-}
+};
 
-const ServerIdPage = async ({ params }: ServerIdPageProps) => {
-  const profile = await currentProfile()
+const ServerIdPage = async ({
+  params
+}: ServerIdPageProps) => {
+  const profile = await currentProfile();
 
-  if (!profile) return redirectToSignIn()
+  if (!profile) {
+    return redirectToSignIn();
+  }
 
   const server = await db.server.findUnique({
     where: {
@@ -21,28 +25,28 @@ const ServerIdPage = async ({ params }: ServerIdPageProps) => {
       members: {
         some: {
           profileId: profile.id,
-        },
-      },
+        }
+      }
     },
     include: {
       channels: {
         where: {
-          name: "general",
+          name: "general"
         },
         orderBy: {
-          createdAt: "asc",
-        },
-      },
-    },
+          createdAt: "asc"
+        }
+      }
+    }
   })
 
-  const initialChannel = server?.channels[0]
+  const initialChannel = server?.channels[0];
 
   if (initialChannel?.name !== "general") {
-    return null
+    return null;
   }
 
   return redirect(`/servers/${params.serverId}/channels/${initialChannel?.id}`)
 }
-
-export default ServerIdPage
+ 
+export default ServerIdPage;
