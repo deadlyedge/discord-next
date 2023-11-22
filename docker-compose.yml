@@ -1,0 +1,25 @@
+version: '3.9'
+
+# The containers that compose the project
+services:
+  discord:
+    image: xdream76/discord-next-docker:latest
+    restart: unless-stopped
+    container_name: discord-next
+    depends_on:
+      - mysql
+    ports:
+      - '3000:3000'
+    volumes:
+      - $PWD/.env:/app/.env:ro
+    environment:
+      - DATABASE_URL=mysql://root:prisma@mysql:3306/mydb?schema=public
+  
+  mysql:
+    image: mariadb:latest
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: prisma
+
+volumes: #define our mysql volume used above
+  mysql:
