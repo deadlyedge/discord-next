@@ -10,6 +10,7 @@ import { ChannelType } from "@prisma/client"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -103,6 +104,9 @@ export const CreateChannelModal = () => {
           <DialogTitle className='text-2xl text-center font-bold'>
             创建频道
           </DialogTitle>
+          <DialogDescription className='text-center text-zinc-500'>
+            目前只能选择文字类型的频道
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
@@ -147,6 +151,7 @@ export const CreateChannelModal = () => {
                           <SelectItem
                             key={type}
                             value={type}
+                            disabled={type !== 'TEXT'} // 无法连接livekit
                             className='capitalize'>
                             {type.toLowerCase()}
                           </SelectItem>
